@@ -7,90 +7,110 @@
 \usepackage{listings}
 
 \begin{document}
+Working with Git involves more than just managing multiple savepoints. It also enables collaboration among multiple users by sharing commits through Git Remotes. A repository is essentially a collection of files within a directory that contains a .git folder. It can exist remotely on another machine's filesystem, mirroring the local setup. 
+We have to keep in mind, that there is no such thing as \textit{The Internet}, but just other people's computers and networks are basically distributed filesystems.
 
-Working with Git not only enables us to work with multiple savepoints, but also allows us to work with multiple collaborators.
-Sharing savepoints - commits - between group-members is possible with the help of Git Remotes.
-A repository is a collection of files, typically organized in one directory, in which also a \texttt{.git} folder is present.
-A remote repository the same, but on the filesystem of another machine.
-We have to keep in mind, that there is no such thing as \textit{The Internet}, but just other peoples computers.
-Networks are basically distributed filesystems.
-Each file in the network has a unique name, just as the files in our own filesystem.
-Instead of just having a \texttt{/home/user/} folder, we have a \texttt{IP:filepath} for a resource inside of the network.
+Each file in the network has a unique name, just like files in our home filesystem.
+Instead of using a path relative to our root folder \texttt{/} - like \texttt{/home/user/} folder - you can access a resource within the network by using an IP address and file path like \texttt{ip:filepath}.
 This is also called a URI - Uniform Resource Identifier.
-In naive networks, we can store and load files, just as we would in our own filesystem.
-To prevent malicious actors from tinkering with other peoples computers a concept called server was introduced. 
-Instead of accessing a remote computers filesystem directly, the remote computer is running a program, which has the responsibility to make sure, that only the right person can access only a limited subset of the remote filesystem.
-The most common type of server might be a webserver, whichs purpose is to provide access to files in a specific directory.
-Git Remotes work in sort of a similar way.
-We can read and write files from and to a remote repository, a repository, which is stored on the filesystem of another machine.
-A webserver or an SSH-server can be used to provide access to the remote repository.
+
+Simple networks allow us to save and load files as if they were on our own filesystem.
+But to ensure that malicious actors cannot tamper with other people's computers, a concept called \texttt{server} has been introduced. 
+What this does is, instead of accessing the remote computer's filesystem directly, the remote computer runs a program that is responsible for making sure that only the right person can access only a limited subset of the remote filesystem.
+A webserver is the most common type of server, used to provide access to files in a specific directory.
+
+Similarly, Git Remotes allow us to read and write files from and to a remote repository, which is stored on the filesystem of another machine.
+Access to the remote repository can be provided through a webserver or an SSH-server. Git offers different possibilities to authenticate a machine that tries to push to a remote server. Usually, each machine that you work on has a dedicated SSH-Keypair to authenticate for one git server (you might have one key for GitLab and one for GitHub. Do not reuse the same key!)
 
 \section*{Exercise}
 \begin{aufgabe}
-    Originally, Git was supposed to synchronize the filesystems of two or more co-workers inside of a trusted network.
-    To work with multiple collaborators, we need to know, where they stored their repository. 
+    Originally, Git was supposed to synchronize the filesystems of two or more co-workers inside a trusted network.
+    To work with multiple collaborators, we need to know where they stored their repository. 
     In the following examples, we will use an online-platform, called GitHub, as an example.
     Just think of GitHub as a remote repository with an additional website to manage the repository.
-    There are three different commands we'd like to explore now:
+    There are four different commands we'd like to explore now:
     \begin{enumerate}
         \item \texttt{git clone}
         \item \texttt{git pull}
         \item \texttt{git push}
+        \item \texttt{git remote}
     \end{enumerate}
-    Let's assume, that you just started working at a new company.
-    Your filesystem is empty, but one of your co-workers has already been working on a project.
-    You decide, that you'd like to chime in and work with your co-worker.
-    To get an exact copy of your co-workers repository, you need to use \texttt{git clone}.
-    This not only copies the current status of the repository, but also the history of the repository.
-    Now you both work on the same project. 
-    Some day, your co-worker says, that he made major changes to the project and you should pull them into your local repository.
-    Not to get ahead of ourselves here, but you may already keep the term \texttt{pull-request} in your mind, for somebody asking you, to pull their new code into your repository.
-    Since you just want to get the newest changes and don't want to copy all of the history, you can use \texttt{git pull}.
-    \footnote[1]{\texttt{git pull} is also known as \texttt{git fetch} followed by \texttt{git merge}. But that should bother us later.}
-    Let's assume, that your co-worker did some really neccessary changes and you shouldn't be able to run the old code any longer.
-    If there is a certain level of trust between you and your co-worker, they may use \texttt{git push}.
-    By using \texttt{git push}, changes can be send to another repository. 
-    The other repository, that is not on our own computer is called a remote repository. 
+    The first thing when you are onboarded to a project is to clone the codebase using \texttt{git clone}. This gives you your own working copy so that you can start exploring the code and contribute to the project. A clone contains the entire history of the project, so you clone all branches and commits that are stored on the remote server (which can be pretty huge for large projects).
+
+    Now, you are not the only contributor - your colleagues regulary push to the remote repository. To keep your local copy in sync and have all the latest changes everybody else is building on, you need to regularly pull from the remote using\texttt{git pull}.
+    \footnote[1]{\texttt{git pull} is also known as \texttt{git fetch} followed by \texttt{git merge}. But we get into that later} 
+    
+\textit{Not to get ahead of ourselves here, but you may already keep the term \texttt{pull-request} in your mind, for somebody asking you, to pull their new code into your repository.}
+
+   Assuming your colleague has implemented essential updates, it becomes crucial for you to incorporate these changes into your local environment. So the changes need to be transferred from their machine to yours - the use of git push becomes relevant. This command facilitates the transmission of updates to a repository situated on a server, not on your personal computer, referred to as a remote repository. 
+   Long story short: If your coworker wants you to use their changes, they will push to the remote, and you will pull from the remote, so everybody usually syncs with that one special repo on a server.
+   
     We can add a link to a remote repository to our local repository by using \texttt{git remote add}.
     Go to GitHub and create a new \textbf{empty} repository.
-    Navigate into your local repository and use \texttt{git remote add myRemoteRepo git@github.com:<your-username>/<your-repository-name>.git} to link your local repository to your remote repository.
+    Navigate into your local repository. There, we configure your new GitHub repo as the remote one that we synchronize with. Use \texttt{git remote add myRemoteRepo git@github.com:<your-username>/<your-repository-name>.git} to link your local repository to your remote repository.
     Run \texttt{git push myRemoteRepo} to push your local repository to your remote repository.
-    This command should fail!
+    
+    Note: This command should fail! This does not indicate that you did something wrong yet, there is some more configuration to be done.
 \end{aufgabe}
 
 \begin{aufgabe}
-    To be able to push to a remote repository, we are using the SSH-protocol.
-    As you shall already know, we should use a keypair to authenticate ourselves to the remote repositories server.
-    Thus we need to generate a keypair, or use an existing one.
-    Copy your public key and add it to your GitHub-Account.
-    Go to \href{https://github.com/settings/keys}{your profile-settings}, and click on \texttt{New SSH key}.
-    Add your key to the authorized keys.
-    Git doesn't allow us to give an identity-file as a parameter to \texttt{git push}.
-    But that is no problem, we will just use our \texttt{$\sim$/.shh/config}-file instead and define the key that should be used in there.
-    If the file doesn't already exist, you can create it.
-    Add the follwowing lines to your \texttt{$\sim$/.shh/config} file:
+    To be able to push to a remote repository, we use the SSH-protocol to authenticate ourselves. Hence, we need a keypair that we can use  to authenticate ourselves to the remote repositories' server.
+    Thus, we need to generate a keypair and then add the public key to our GitHub account.
+    
+    Follow these steps to set up SSH authentication (you only need to do this once per git server):
+    \begin{enumerate}
+    \item Generate a new SSH keypair on your local machine.
+    \item Navigate to \href{https://github.com/settings/keys}{your profile settings} on GitHub, and click on \texttt{New SSH key} to add your new public key to your account.
+    \item As Git does not permit specifying an identity file directly in the \texttt{git push} command, configure your SSH client to use your private key when connecting to GitHub. If the file \texttt{$\sim$/.ssh/config} does not exist on your machine, create it.
+    \item Add the following configuration to your \texttt{$\sim$/.ssh/config} file, specifying the path to your private SSH key:
     \begin{lstlisting}
     Host github.com
-        HostName github.com
-        IdentityFile <path-to-your-private-key>
+    HostName github.com
+    IdentityFile <path-to-your-private-key>
     \end{lstlisting}
-    This config makes sure, that Git will use our private key to authenticate itself to the remote repositories server.
-    Run \texttt{git push myRemoteRepo} again.
+    This configuration ensures Git uses your private key for authentication with the remote repository's server.
+    \item Attempt to run \texttt{git push myRemoteRepo} again. This time, your SSH configuration should authenticate you, allowing the push to proceed.
+    \end{enumerate}
 \end{aufgabe}
 
-\begin{aufgabe}
-    Delete your local repository and and use the \texttt{git clone} command, to get an exact copy of your remote repository.
-    Add some files, and push them again. 
-\end{aufgabe}
 
 \begin{aufgabe}
+   Now, let's focus on integrating changes into our main branch, simulating a typical workflow of handling pull requests locally. Begin by assuming you've received a request to merge changes from a collaborator. Hence, you need to pull these changes into your repo.
+   
+   For us, the first step in this process involves deleting your current local copy of the project. This is to simulate starting from a clean slate, similar to when you're preparing to incorporate new changes from a collaborator for the first time.
+    
+    Proceed by cloning the repository from GitHub to obtain the latest version of your project. This cloned version represents the most up-to-date collective effort of your team, setting the stage for your contributions.
+    
+    Next, create a new branch in your local repository named \texttt{feature-branch}. This branch serves as your playground for making modifications—feel free to alter existing files or introduce new ones to the project. After you're satisfied with the adjustments you've made, commit these changes to \texttt{feature-branch}. If you had a coworker, you wouldn't need to make alterations here.
+    
+    With your changes committed, switch back to the main branch of your local repository. Now, merge the changes from \texttt{feature-branch} into the main branch using the \texttt{git merge feature-branch} command. This merge operation integrates your contributions into the main line of development, simulating the final step of accepting a pull request.
+
+    Inspect your repository with \texttt{git status} and don't forget to \texttt{git push} your changes if your colleagues need to base their work on this, too.
+\end{aufgabe}
+
+
+\begin{aufgabe}
+    Today, Pullrequests usually involve a discussion around implementation details. Let's see how GitHub supports this without the need of reading mailing lists.
+    
     Create a new branch, change some files, and push it to your remote repository.
     Describe what you can see on the GitHub page of your remote repository.
+
+    GitHub might already offer you to create a PullRequest from the branch with recent changes. Attention: This is not a git feature! Each git server introduces their own variant of a user interface for PullRequests. However, they are still pretty handy because you can discuss your changes with collaborators and configure rules regarding acceptance of these requests.
+    
+     To create a Pull Request on GitHub, follow these steps:
+    \begin{enumerate}
+        \item Navigate to your repository on GitHub in a web browser.
+        \item Ensure your newly pushed branch is selected. You can switch between branches using the branch dropdown menu.
+        \item Click on the "Pull requests" tab near the top of the repository page, then click the "New pull request" button.
+        \item On the "Compare" page, ensure that your base branch (typically \texttt{main}) and compare branch (\texttt{feature-branch} or whatever branch you've made changes on) are correctly selected.
+        \item Review the changes listed to ensure they are correct and complete. Then, click on "Create pull request".
+        \item Give your pull request a title and a detailed description of the changes. This helps reviewers understand what you've done and why.
+        \item Once you're ready, click on "Create pull request" again to submit it for review.
+    \end{enumerate}
+    
+    After submitting the pull request, describe the features GitHub offers for repository owners to review, comment on, and ultimately, if they choose, merge your changes into the main branch. 
 \end{aufgabe}
 
-\begin{aufgabe}
-    Try to merge something in your own repo
-\end{aufgabe}
 
 \section*{Anmerkungen}
 \begin{enumerate}
