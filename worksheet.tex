@@ -1,98 +1,63 @@
 \documentclass{dcbl/challenge}
 
-\setdoctitle{Git Remote}
+\setdoctitle{Collaborate using GitHub}
 \setdocauthor{Stephan Bökelmann}
 \setdocemail{sboekelmann@ep1.rub.de}
 \setdocinstitute{AG Physik der Hadronen und Kerne}
-\usepackage{listings}
+
 
 \begin{document}
 
-Working with Git not only enables us to work with multiple savepoints, but also allows us to work with multiple collaborators.
-Sharing savepoints - commits - between group-members is possible with the help of Git Remotes.
-A repository is a collection of files, typically organized in one directory, in which also a \texttt{.git} folder is present.
-A remote repository the same, but on the filesystem of another machine.
-We have to keep in mind, that there is no such thing as \textit{The Internet}, but just other peoples computers.
-Networks are basically distributed filesystems.
-Each file in the network has a unique name, just as the files in our own filesystem.
-Instead of just having a \texttt{/home/user/} folder, we have a \texttt{IP:filepath} for a resource inside of the network.
-This is also called a URI - Uniform Resource Identifier.
-In naive networks, we can store and load files, just as we would in our own filesystem.
-To prevent malicious actors from tinkering with other peoples computers a concept called server was introduced. 
-Instead of accessing a remote computers filesystem directly, the remote computer is running a program, which has the responsibility to make sure, that only the right person can access only a limited subset of the remote filesystem.
-The most common type of server might be a webserver, whichs purpose is to provide access to files in a specific directory.
-Git Remotes work in sort of a similar way.
-We can read and write files from and to a remote repository, a repository, which is stored on the filesystem of another machine.
-A webserver or an SSH-server can be used to provide access to the remote repository.
+GitHub and similar platforms offer useful features not only for storing code, but also for sharing it.
+To collaborate effectively on GitHub, you need to know a few rules.
+Although there are several modes of collaborating, the one explained here is probably the most general and effective.
+Our goal is to work with multiple people on the same project, therefore you should work with at least one partner in this exercise.
 
-\section*{Exercise}
+\section*{Exercises}
 \begin{aufgabe}
-    Originally, Git was supposed to synchronize the filesystems of two or more co-workers inside of a trusted network.
-    To work with multiple collaborators, we need to know, where they stored their repository. 
-    In the following examples, we will use an online-platform, called GitHub, as an example.
-    Just think of GitHub as a remote repository with an additional website to manage the repository.
-    There are three different commands we'd like to explore now:
-    \begin{enumerate}
-        \item \texttt{git clone}
-        \item \texttt{git pull}
-        \item \texttt{git push}
-    \end{enumerate}
-    Let's assume, that you just started working at a new company.
-    Your filesystem is empty, but one of your co-workers has already been working on a project.
-    You decide, that you'd like to chime in and work with your co-worker.
-    To get an exact copy of your co-workers repository, you need to use \texttt{git clone}.
-    This not only copies the current status of the repository, but also the history of the repository.
-    Now you both work on the same project. 
-    Some day, your co-worker says, that he made major changes to the project and you should pull them into your local repository.
-    Not to get ahead of ourselves here, but you may already keep the term \texttt{pull-request} in your mind, for somebody asking you, to pull their new code into your repository.
-    Since you just want to get the newest changes and don't want to copy all of the history, you can use \texttt{git pull}.
-    \footnote[1]{\texttt{git pull} is also known as \texttt{git fetch} followed by \texttt{git merge}. But that should bother us later.}
-    Let's assume, that your co-worker did some really neccessary changes and you shouldn't be able to run the old code any longer.
-    If there is a certain level of trust between you and your co-worker, they may use \texttt{git push}.
-    By using \texttt{git push}, changes can be send to another repository. 
-    The other repository, that is not on our own computer is called a remote repository. 
-    We can add a link to a remote repository to our local repository by using \texttt{git remote add}.
-    Go to GitHub and create a new \textbf{empty} repository.
-    Navigate into your local repository and use \texttt{git remote add myRemoteRepo git@github.com:<your-username>/<your-repository-name>.git} to link your local repository to your remote repository.
-    Run \texttt{git push myRemoteRepo} to push your local repository to your remote repository.
-    This command should fail!
+    Go to \url{https://github.com/} and create a new repository.
+    Initialize this repository with a \texttt{README.md} file.
+    Clone this repository to your computer, change the \texttt{README.md} file and push the changes to your repository.
+    This should be done by all partners in this exercise.
 \end{aufgabe}
 
 \begin{aufgabe}
-    To be able to push to a remote repository, we are using the SSH-protocol.
-    As you shall already know, we should use a keypair to authenticate ourselves to the remote repositories server.
-    Thus we need to generate a keypair, or use an existing one.
-    Copy your public key and add it to your GitHub-Account.
-    Go to \href{https://github.com/settings/keys}{your profile-settings}, and click on \texttt{New SSH key}.
-    Add your key to the authorized keys.
-    Git doesn't allow us to give an identity-file as a parameter to \texttt{git push}.
-    But that is no problem, we will just use our \texttt{$\sim$/.shh/config}-file instead and define the key that should be used in there.
-    If the file doesn't already exist, you can create it.
-    Add the follwowing lines to your \texttt{$\sim$/.shh/config} file:
-    \begin{lstlisting}
-    Host github.com
-        HostName github.com
-        IdentityFile <path-to-your-private-key>
-    \end{lstlisting}
-    This config makes sure, that Git will use our private key to authenticate itself to the remote repositories server.
-    Run \texttt{git push myRemoteRepo} again.
+   Begin by sharing the links to your GitHub repositories with your collaboration partners. This will allow each of you to access and view each other's projects. While directly cloning the repository is a straightforward method to start working with the project, there's a more collaborative approach that leverages GitHub's features.
+    
+    Notice the \textbf{Fork} button located at the top right corner of the repository page? Clicking on this button will create a copy of the repository under your own GitHub account. This process, known as forking, grants you your own version of the project to work on independently. Each member of the group should fork another partner's repository, ensuring that everyone has the opportunity to contribute to a different project.
+    
+    Forking is essential in scenarios where direct contributions to the original repository are restricted due to permissions—typically, you don't have the right to push changes to someone else's project. However, public repositories can always be forked, allowing you to make your modifications and subsequently suggest these changes to the original project. This suggestion is done through a pull request, which the original repository's owners can review. For this process to work effectively, ensure that your fork is set to be publicly accessible, allowing others to see and evaluate your contributions.
 \end{aufgabe}
 
 \begin{aufgabe}
-    Delete your local repository and and use the \texttt{git clone} command, to get an exact copy of your remote repository.
-    Add some files, and push them again. 
+    After successfully forking a partner's repository to your own GitHub account, the next step involves cloning this forked repository to your local machine. This enables you to work on the project directly from your own development environment. To clone the repository, use the git clone command followed by the URL of your forked repository. You can find this URL on your fork's GitHub page.
+    
+    Make some changes to the \texttt{README.md} file. Next, it's time to commit them and push the updates back to your repository on GitHub. Use the \texttt{git add README.md} command to stage your changes, followed by  \texttt{git commit -m} to commit them with a meaningful message. Finally, push your changes using \texttt{git push}. 
+    
+    After pushing the changes, inspect the GitHub-webpage of your own fork.
 \end{aufgabe}
 
 \begin{aufgabe}
-    Create a new branch, change some files, and push it to your remote repository.
-    Describe what you can see on the GitHub page of your remote repository.
+    With the changes you've made now present in your fork, it's time to consider contributing them back to the original project. This step is taken when you believe your modifications could benefit the project as a whole. To initiate this process, we want to create a Pull request that your partner can decide on.
+    
+    Your fork has two additional buttons: A \textbf{contribute} and a \textbf{sync} button. With the \textbf{contribute}-Button, you get a setup for a Pull Request that chooses the main branch on your partner's repo as the target branch.
+    
+    Use this page, to tell the partner about the recent changes, and why you believe, that this change is relevant. This involves writing a description of your changes and why they should consider accepting your PR. Though this feels a little over-the-top right now, this is one of the most important parts of collaboration.
+    
+    When you are finished, your partner will get a notification about the Pull request in their repository. 
 \end{aufgabe}
 
 \begin{aufgabe}
-    Try to merge something in your own repo
+    Go back to your own repository which your partners forked. You should have received their pull-requests at this point.
+    
+    To see them, navigate to the pull-request view of your repository via the pull-request tab on the top. 
+
+    Select you partner's pull-request and review it. There are multiple options to request changes, review commits and have discussions about the contribution.
+    
+    Finally, if you are fine with them, merge them into your own repository!
 \end{aufgabe}
 
-\section*{Anmerkungen}
+\section*{Annotations}
 \begin{enumerate}
     \item Link zu einem YouTube-Video: \url{https://www.youtube.com}
 \end{enumerate}
